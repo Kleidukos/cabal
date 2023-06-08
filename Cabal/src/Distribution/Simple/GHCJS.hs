@@ -1,7 +1,6 @@
 {-# LANGUAGE CPP #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE RankNTypes #-}
-{-# LANGUAGE TupleSections #-}
 
 module Distribution.Simple.GHCJS
   ( getGhcInfo
@@ -84,6 +83,7 @@ import Distribution.Version
 import Control.Monad (msum)
 import Data.Char (isLower)
 import qualified Data.Map as Map
+import Distribution.Types.ParStrat (ParStrat)
 import System.Directory
   ( canonicalizePath
   , createDirectoryIfMissing
@@ -466,7 +466,7 @@ toJSLibName lib
 
 buildLib
   :: Verbosity
-  -> Flag (Maybe Int)
+  -> Flag ParStrat
   -> PackageDescription
   -> LocalBuildInfo
   -> Library
@@ -477,7 +477,7 @@ buildLib = buildOrReplLib Nothing
 replLib
   :: [String]
   -> Verbosity
-  -> Flag (Maybe Int)
+  -> Flag ParStrat
   -> PackageDescription
   -> LocalBuildInfo
   -> Library
@@ -488,7 +488,7 @@ replLib = buildOrReplLib . Just
 buildOrReplLib
   :: Maybe [String]
   -> Verbosity
-  -> Flag (Maybe Int)
+  -> Flag ParStrat
   -> PackageDescription
   -> LocalBuildInfo
   -> Library
@@ -889,7 +889,7 @@ startInterpreter verbosity progdb comp platform packageDBs = do
 -- | Build a foreign library
 buildFLib
   :: Verbosity
-  -> Flag (Maybe Int)
+  -> Flag ParStrat
   -> PackageDescription
   -> LocalBuildInfo
   -> ForeignLib
@@ -900,7 +900,7 @@ buildFLib v njobs pkg lbi = gbuild v njobs pkg lbi . GBuildFLib
 replFLib
   :: [String]
   -> Verbosity
-  -> Flag (Maybe Int)
+  -> Flag ParStrat
   -> PackageDescription
   -> LocalBuildInfo
   -> ForeignLib
@@ -912,7 +912,7 @@ replFLib replFlags v njobs pkg lbi =
 -- | Build an executable with GHC.
 buildExe
   :: Verbosity
-  -> Flag (Maybe Int)
+  -> Flag ParStrat
   -> PackageDescription
   -> LocalBuildInfo
   -> Executable
@@ -923,7 +923,7 @@ buildExe v njobs pkg lbi = gbuild v njobs pkg lbi . GBuildExe
 replExe
   :: [String]
   -> Verbosity
-  -> Flag (Maybe Int)
+  -> Flag ParStrat
   -> PackageDescription
   -> LocalBuildInfo
   -> Executable
@@ -1218,7 +1218,7 @@ isHaskell fp = elem (takeExtension fp) [".hs", ".lhs"]
 -- | Generic build function. See comment for 'GBuildMode'.
 gbuild
   :: Verbosity
-  -> Flag (Maybe Int)
+  -> Flag ParStrat
   -> PackageDescription
   -> LocalBuildInfo
   -> GBuildMode

@@ -67,6 +67,7 @@ module Distribution.Simple.Compiler
   , arDashLSupported
   , libraryDynDirSupported
   , libraryVisibilitySupported
+  , jsemSupported
 
     -- * Support for profiling detail levels
   , ProfDetailLevel (..)
@@ -412,6 +413,15 @@ libraryVisibilitySupported comp = case compilerFlavor comp of
   _ -> False
   where
     v = compilerVersion comp
+
+-- | Does this compiler support the -jsem option?
+jsemSupported :: Compiler -> Bool
+jsemSupported compiler =
+  case compilerFlavor compiler of
+    GHC -> v >= mkVersion [9, 7]
+    _ -> False
+  where
+    v = compilerVersion compiler
 
 -- | Utility function for GHC only features
 ghcSupported :: String -> Compiler -> Bool

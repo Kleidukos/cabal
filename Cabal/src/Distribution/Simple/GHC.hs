@@ -150,6 +150,7 @@ import qualified Data.ByteString.Lazy.Char8 as BS
 import Distribution.Compat.Binary (encode)
 import Distribution.Compat.ResponseFile (escapeArgs)
 import qualified Distribution.InstalledPackageInfo as IPI
+import Distribution.Types.ParStrat (ParStrat)
 
 -- -----------------------------------------------------------------------------
 -- Configuring
@@ -586,7 +587,7 @@ getInstalledPackagesMonitorFiles verbosity platform progdb =
 
 buildLib
   :: Verbosity
-  -> Flag (Maybe Int)
+  -> Flag ParStrat
   -> PackageDescription
   -> LocalBuildInfo
   -> Library
@@ -597,7 +598,7 @@ buildLib = buildOrReplLib Nothing
 replLib
   :: ReplOptions
   -> Verbosity
-  -> Flag (Maybe Int)
+  -> Flag ParStrat
   -> PackageDescription
   -> LocalBuildInfo
   -> Library
@@ -608,7 +609,7 @@ replLib = buildOrReplLib . Just
 buildOrReplLib
   :: Maybe ReplOptions
   -> Verbosity
-  -> Flag (Maybe Int)
+  -> Flag ParStrat
   -> PackageDescription
   -> LocalBuildInfo
   -> Library
@@ -1313,7 +1314,7 @@ runReplOrWriteFlags verbosity ghcProg comp platform rflags replOpts bi clbi pkg_
 -- | Build a foreign library
 buildFLib
   :: Verbosity
-  -> Flag (Maybe Int)
+  -> Flag ParStrat
   -> PackageDescription
   -> LocalBuildInfo
   -> ForeignLib
@@ -1324,7 +1325,7 @@ buildFLib v njobs pkg lbi = gbuild v njobs pkg lbi . GBuildFLib
 replFLib
   :: ReplOptions
   -> Verbosity
-  -> Flag (Maybe Int)
+  -> Flag ParStrat
   -> PackageDescription
   -> LocalBuildInfo
   -> ForeignLib
@@ -1336,7 +1337,7 @@ replFLib replFlags v njobs pkg lbi =
 -- | Build an executable with GHC.
 buildExe
   :: Verbosity
-  -> Flag (Maybe Int)
+  -> Flag ParStrat
   -> PackageDescription
   -> LocalBuildInfo
   -> Executable
@@ -1347,7 +1348,7 @@ buildExe v njobs pkg lbi = gbuild v njobs pkg lbi . GBuildExe
 replExe
   :: ReplOptions
   -> Verbosity
-  -> Flag (Maybe Int)
+  -> Flag ParStrat
   -> PackageDescription
   -> LocalBuildInfo
   -> Executable
@@ -1651,7 +1652,7 @@ replNoLoad replFlags l
 -- | Generic build function. See comment for 'GBuildMode'.
 gbuild
   :: Verbosity
-  -> Flag (Maybe Int)
+  -> Flag ParStrat
   -> PackageDescription
   -> LocalBuildInfo
   -> GBuildMode
